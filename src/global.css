@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@import "tailwindcss";
+
+:root {
+  --bg-color: #f9f9f9;
+  --bg-color-secondary: #eff6ff;
+  --primary-color: #1f2937;
+  --secondary-color: #3e4c63;
+  --tertiary-color: #f59e0b;
+
+  font-family: "Geist Mono", serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--secondary-color);
+}
+
+@theme {
+  --color-background: var(--bg-color);
+  --color-background-secondary: var(--bg-color-secondary);
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+  --color-tertiary: var(--tertiary-color);
+}
