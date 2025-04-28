@@ -1,15 +1,30 @@
 import { BarChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button, Card, Input } from "../components";
-import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+  seller: Yup.string().required("Nome do vendedor é obrigatório"),
+  tickets: Yup.string()
+    .required("Números dos tickets são obrigatórios")
+    .matches(
+      /^[0-9]+(,[0-9]+)*$/,
+      "Insira apenas números separados por vírgulas",
+    ),
+});
 
 export const Home = () => {
-  const [ticketInput, setTicketInput] = React.useState("");
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(ticketInput);
-  };
+  const formik = useFormik({
+    initialValues: {
+      seller: "",
+      tickets: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -34,7 +49,7 @@ export const Home = () => {
             <Card.Title>Registro de tickets</Card.Title>
           </Card.Header>
           <Card.Content>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={formik.handleSubmit}>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <div>
@@ -43,8 +58,17 @@ export const Home = () => {
                     </label>
                     <Input
                       id="seller"
+                      name="seller"
                       placeholder="Insira o nome de quem vendeu o ticket"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.seller}
                     />
+                    {formik.touched.seller && formik.errors.seller && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {formik.errors.seller}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -53,11 +77,18 @@ export const Home = () => {
                     </label>
                     <Input
                       id="tickets"
+                      name="tickets"
                       placeholder="Insira os números dos tickets (e.g., 135 ou 135,136,137)"
-                      value={ticketInput}
-                      onChange={(e) => setTicketInput(e.target.value)}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.tickets}
                       className="bg-white"
                     />
+                    {formik.touched.tickets && formik.errors.tickets && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {formik.errors.tickets}
+                      </p>
+                    )}
                     <p className="text-muted-foreground text-xs">
                       Insira um número de ticket ou vários números separados por
                       vírgulas.
