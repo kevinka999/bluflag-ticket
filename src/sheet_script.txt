@@ -1,0 +1,47 @@
+function doGet(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Página1");
+  const data = sheet.getDataRange().getValues();
+  const result = data.map(row => ({
+    name: row[0],
+    value: row[1]
+  }));
+
+  const output = ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+
+  return output;
+}
+
+function doPost(e) {
+  try {
+    // Acesse os parâmetros diretamente com e.parameter
+    var name = e.parameter.name;  // 'name' enviado no corpo da requisição
+    var value = e.parameter.value;  // 'value' enviado no corpo da requisição
+
+    Logger.log("Recebido name: " + name);  // Log do nome
+    Logger.log("Recebido value: " + value);  // Log do valor
+
+    // Se 'value' for uma string separada por vírgulas, converta ela para um array
+    var valueArray = value.split(',').map(function(val) {
+      return val.trim();
+    });
+
+    Logger.log("Array de valores: " + JSON.stringify(valueArray));  // Log do array de valores
+
+    // Lógica de gravação na planilha
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Página1');
+    valueArray.forEach(function(val) {
+      sheet.appendRow([name, val]);
+    });
+
+    return ContentService.createTextOutput(
+      JSON.stringify({ status: 'success', data: 'Dados salvos com sucesso!' })
+    ).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    Logger.log("Erro: " + error.message);  // Log de erro
+    return ContentService.createTextOutput(
+      JSON.stringify({ status: 'error', message: error.message })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+}

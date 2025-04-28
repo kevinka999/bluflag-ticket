@@ -1,54 +1,39 @@
-# React + TypeScript + Vite
+# Pastelada Flag - Controle de Vendas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este é um sistema simples feito em **React** com integração ao **Google Sheets** para ajudar no controle da venda de _tickets_ da nossa Pastelada voltada para arrecadação de fundos, organizada pelo time de futebol _Flag_.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Controle de quantidade de tickets vendidos
+- Atualização em tempo real em uma planilha do Google Sheets
+- Visualização de resumo de vendas
 
-## Expanding the ESLint configuration
+## Tecnologias Utilizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- React Query
+- Google Sheets API
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Como Rodar o Projeto
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. Clone o repositório
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2. Instale as dependências com seu gerenciador de pacotes preferido
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+3. Configure a integração com o Google Sheets:
+
+   - Abra **Extension → Apps Script**
+   - Copie e cole o script localizado em `src/sheet_script.txt`
+
+4. Defina as variáveis de ambiente:
+
+   VITE_API_URL=<sua_url_pública>  
+   VITE_NUMBERS_OF_TICKET=<quantidade_máxima_de_tickets>
+
+## Contribuição
+
+Sinta-se à vontade para abrir e enviar _pull requests_!
+
+## Licença
+
+Este projeto é de uso interno do time. 💙🏈
