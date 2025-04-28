@@ -9,7 +9,7 @@ import { useToast } from "../context/ToastContext";
 
 const validationSchema = Yup.object({
   seller: Yup.string().required("Nome do vendedor é obrigatório"),
-  tickets: Yup.string()
+  numbers: Yup.string()
     .required("Números dos tickets são obrigatórios")
     .matches(
       /^[0-9]+(,[0-9]+)*$/,
@@ -55,6 +55,8 @@ export const Home = () => {
         });
     },
   });
+
+  console.log(formik);
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
