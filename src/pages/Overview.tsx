@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Ticket } from "../types";
 import api from "../api";
 import { Button, Card, Input, PieGraphic, Table } from "../components";
-import { ArrowDown, ArrowLeft, ArrowUp, Search } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Overview = () => {
@@ -28,7 +28,11 @@ export const Overview = () => {
   }, []);
 
   if (loading && !tickets.length) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="text-primary h-24 w-24 animate-spin" />
+      </div>
+    );
   }
 
   const totalTickets = import.meta.env.VITE_NUMBERS_OF_TICKET;
