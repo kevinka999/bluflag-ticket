@@ -2,10 +2,10 @@ import { BarChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button, Card, Input } from "../components";
 import { useFormik } from "formik";
-import { useState } from "react";
 import * as Yup from "yup";
 import api from "../api";
 import { useToast } from "../context/ToastContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const validationSchema = Yup.object({
   seller: Yup.string().required("Nome do vendedor é obrigatório"),
@@ -18,8 +18,26 @@ const validationSchema = Yup.object({
 });
 
 export const Home = () => {
-  const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
+
+  const queryClient = useQueryClient();
+
+  const { mutate: registerTickets, isPending } = useMutation({
+    mutationFn: api.ticket.post,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
+      showToast({
+        variant: "success",
+        message: "Tickets registrados com sucesso",
+      });
+    },
+    onError: () => {
+      showToast({
+        variant: "warning",
+        message: "Erro ao registrar tickets",
+      });
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -28,35 +46,12 @@ export const Home = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      setLoading(true);
-
-      api.ticket
-        .post({
-          seller: values.seller,
-          numbers: values.numbers,
-        })
-        .then((success) => {
-          if (success) {
-            showToast({
-              variant: "success",
-              message: "Tickets registrados com sucesso",
-            });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          showToast({
-            variant: "warning",
-            message: "Erro ao registrar tickets",
-          });
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      registerTickets({
+        seller: values.seller,
+        numbers: values.numbers,
+      });
     },
   });
-
-  console.log(formik);
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -133,8 +128,8 @@ export const Home = () => {
                   size="medium"
                   variant="primary"
                   className="mt-6 w-full"
-                  loading={loading}
-                  disabled={loading}
+                  loading={isPending}
+                  disabled={isPending}
                 >
                   Registrar tickets
                 </Button>

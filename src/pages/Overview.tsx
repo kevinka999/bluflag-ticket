@@ -1,33 +1,39 @@
-import { useEffect, useState } from "react";
-import { Ticket } from "../types";
-import api from "../api";
+import React from "react";
 import { Button, Card, Input, PieGraphic, Table } from "../components";
 import { ArrowDown, ArrowLeft, ArrowUp, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useToast } from "../context/ToastContext";
+import api from "../api";
 
 export const Overview = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">(
+    "asc",
+  );
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      setLoading(true);
-      api.ticket
-        .get()
-        .then((tickets) => {
-          setTickets(tickets);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    };
+  const { showToast } = useToast();
 
-    fetchTickets();
-  }, []);
+  const {
+    data: tickets = [],
+    isLoading,
+    isRefetching,
+    error: ticketsError,
+  } = useQuery({
+    queryKey: ["tickets"],
+    queryFn: () => api.ticket.get(),
+  });
 
-  if (loading && !tickets.length) {
+  React.useEffect(() => {
+    if (ticketsError) {
+      showToast({
+        message: "Erro ao buscar tickets",
+        variant: "warning",
+      });
+    }
+  }, [ticketsError]);
+
+  if (isLoading || isRefetching) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="text-primary h-24 w-24 animate-spin" />
