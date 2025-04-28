@@ -3,8 +3,8 @@ import { Ticket } from "../types";
 const API_URL = import.meta.env.VITE_API_URL;
 
 type GetTicketResponse = {
-  nome: string;
-  valor: number;
+  name: string;
+  value: number;
 };
 
 const getTickets = async (): Promise<Ticket[]> => {
@@ -21,8 +21,8 @@ const getTickets = async (): Promise<Ticket[]> => {
 
     const data: GetTicketResponse[] = await response.json();
     return data.map((ticket) => ({
-      seller: ticket.nome,
-      number: ticket.valor,
+      seller: ticket.name,
+      number: ticket.value,
     }));
   } catch (error) {
     console.error("Error in get ticket information:", error);
