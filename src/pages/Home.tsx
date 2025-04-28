@@ -2,7 +2,10 @@ import { BarChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button, Card, Input } from "../components";
 import { useFormik } from "formik";
+import { useState } from "react";
 import * as Yup from "yup";
+import api from "../api";
+import { useToast } from "../context/ToastContext";
 
 const validationSchema = Yup.object({
   seller: Yup.string().required("Nome do vendedor é obrigatório"),
@@ -15,14 +18,41 @@ const validationSchema = Yup.object({
 });
 
 export const Home = () => {
+  const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
+
   const formik = useFormik({
     initialValues: {
       seller: "",
-      tickets: "",
+      numbers: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      setLoading(true);
+
+      api.ticket
+        .post({
+          seller: values.seller,
+          numbers: values.numbers,
+        })
+        .then((success) => {
+          if (success) {
+            showToast({
+              variant: "success",
+              message: "Tickets registrados com sucesso",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          showToast({
+            variant: "warning",
+            message: "Erro ao registrar tickets",
+          });
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     },
   });
 
@@ -72,21 +102,21 @@ export const Home = () => {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium" htmlFor="tickets">
+                    <label className="text-sm font-medium" htmlFor="numbers">
                       Ticket Numbers
                     </label>
                     <Input
-                      id="tickets"
-                      name="tickets"
+                      id="numbers"
+                      name="numbers"
                       placeholder="Insira os números dos tickets (e.g., 135 ou 135,136,137)"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.tickets}
+                      value={formik.values.numbers}
                       className="bg-white"
                     />
-                    {formik.touched.tickets && formik.errors.tickets && (
+                    {formik.touched.numbers && formik.errors.numbers && (
                       <p className="mt-1 text-xs text-red-500">
-                        {formik.errors.tickets}
+                        {formik.errors.numbers}
                       </p>
                     )}
                     <p className="text-muted-foreground text-xs">
@@ -101,6 +131,8 @@ export const Home = () => {
                   size="medium"
                   variant="primary"
                   className="mt-6 w-full"
+                  loading={loading}
+                  disabled={loading}
                 >
                   Registrar tickets
                 </Button>

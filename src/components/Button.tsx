@@ -1,5 +1,6 @@
 import * as React from "react";
 import { twMerge } from "tailwind-merge";
+import { Loader2 } from "lucide-react";
 
 type Sizes = "small" | "medium" | "large";
 type Variants = "primary" | "secondary" | "outline";
@@ -7,6 +8,7 @@ type Variants = "primary" | "secondary" | "outline";
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: Variants;
   size?: Sizes;
+  loading?: boolean;
 };
 
 const variants: Record<Variants, string> = {
@@ -26,6 +28,9 @@ export const Button = ({
   className,
   variant,
   size = "medium",
+  loading = false,
+  children,
+  disabled,
   ...props
 }: ButtonProps) => {
   const buttonVariants = twMerge(
@@ -35,5 +40,20 @@ export const Button = ({
     className,
   );
 
-  return <button className={buttonVariants} {...props} />;
+  return (
+    <button
+      className={buttonVariants}
+      disabled={disabled || loading}
+      {...props}
+    >
+      {loading ? (
+        <>
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Loading...</span>
+        </>
+      ) : (
+        children
+      )}
+    </button>
+  );
 };
