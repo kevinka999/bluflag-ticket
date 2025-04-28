@@ -1,20 +1,19 @@
 @import "tailwindcss";
 
-@import "tailwindcss";
-
 :root {
   --bg-color: #f9f9f9;
   --bg-color-secondary: #eff6ff;
-  --primary-color: #1f2937;
-  --secondary-color: #3e4c63;
-  --tertiary-color: #f59e0b;
+  --font-color: #364153;
+  --primary-color: #1f65a2;
+  --secondary-color: #1fa292;
+  --tertiary-color: #a2451f;
 
-  font-family: "Geist Mono", serif;
+  font-family: "Inter", sans-serif;
 }
 
 body {
   background-color: var(--bg-color);
-  color: var(--secondary-color);
+  color: var(--font-color);
 }
 
 @theme {
@@ -23,4 +22,13 @@ body {
   --color-primary: var(--primary-color);
   --color-secondary: var(--secondary-color);
   --color-tertiary: var(--tertiary-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-primary);
 }
